@@ -4,14 +4,90 @@
 
 - [冰山算法](#冰山算法)
 - [狙擊手算法](#狙擊手算法)
-- [直接委托算法](#直接委托算法)
 - [網格算法](#網格算法)
 - [套利算法](#套利算法)
 - [條件委托算法](#條件委托算法)
-- [時間加權平均算法](#時間加權平均算法)
 - [最優限價算法](#最優限價算法)
+- [時間加權平均算法](#時間加權平均算法)
+- [直接委托算法](#直接委托算法)
 
 &nbsp;
+
+
+### 直接委托算法
+
+直接發出新的委托（限價單、停止單、市價單）
+
+```
+    def on_tick(self, tick: TickData):
+        """"""
+        if not self.vt_orderid:
+            if self.direction == Direction.LONG:
+                self.vt_orderid = self.buy(
+                    self.vt_symbol,
+                    self.price,
+                    self.volume,
+                    self.order_type,
+                    self.offset
+                )
+                
+            else:
+                self.vt_orderid = self.sell(
+                    self.vt_symbol,
+                    self.price,
+                    self.volume,
+                    self.order_type,
+                    self.offset
+                )
+        self.put_variables_event()
+```
+
+&nbsp;
+
+### 時間加權平均算法
+
+- 將委托數量平均分布在某個時間區域內；
+- 每隔一段時間用指定的價格掛出買單（或者賣單）。
+- 買入情況：買一價低於目標價格時，發出委托，委托數量在剩余委托量與委托分割量中取最小值。
+- 賣出情況：賣一價高於目標價格時，發出委托，委托數量在剩余委托量與委托分割量中取最小值。
+
+```
+    def on_timer(self):
+        """"""
+        self.timer_count += 1
+        self.total_count += 1
+        self.put_variables_event()
+
+        if self.total_count >= self.time:
+            self.write_log("執行時間已結束，停止算法")
+            self.stop()
+            return
+
+        if self.timer_count < self.interval:
+            return
+        self.timer_count = 0
+
+        tick = self.get_tick(self.vt_symbol)
+        if not tick:
+            return
+
+        self.cancel_all()
+
+        left_volume = self.volume - self.traded
+        order_volume = min(self.order_volume, left_volume)
+
+        if self.direction == Direction.LONG:
+            if tick.ask_price_1 <= self.price:
+                self.buy(self.vt_symbol, self.price,
+                         order_volume, offset=self.offset)
+        else:
+            if tick.bid_price_1 >= self.price:
+                self.sell(self.vt_symbol, self.price,
+                          order_volume, offset=self.offset)
+```
+
+&nbsp;
+
 
 ### 冰山算法
 
