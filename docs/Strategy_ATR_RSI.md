@@ -6,11 +6,12 @@ ATR指標的原文是Average True Range，原文的意思是「平均真實區�
 在計算ATR指標時，要先算出TR (True Range)這個數列，TR有一個明確的定義, 它指的是在以下三個數字中最大的那個數字：
  1. 今日最高價減最低價 
  2. 今日最高價減昨日收盤價的絕對值
- 3. 今日最低價減昨日收盤價的絕對值
-所以我們可以將TR(在此指的是今天股價真正的波動範圍)寫成下式：
+ 3. 今日最低價減昨日收盤價的絕對值  
+ ![image](https://histock.tw/uploadimages/38589/ae01d492c53c388ac1422a6342e7ce11.png)  
+所以我們可以將TR(在此指的是今天股價真正的波動範圍)寫成下式：  
 `1.  TR t  ＝MAX(  (Ht－Lt ) ， ( Ht- Ct-1) ， ( Lt-Ct-1)  )`  
 
- #TR之所以這樣設計的原因在於：
+ ### TR之所以這樣設計的原因在於：
  1.如果今天股價跟昨天相比沒有劇烈漲跌，那麼今天的波動範圍就是今日最高價減去今日最低價；
  2.如果今天大盤是跳空上漲，而且這個空沒有被回補，那麼如果還是以今高減今低當作今天價格的波動幅度，
  那顯然就遺漏了跳空上漲的部份，所以要將那部份加回來，所以今天TR就是今日最高價減去昨日收盤價；
@@ -25,11 +26,13 @@ ATR指標的原文是Average True Range，原文的意思是「平均真實區�
 
 TR真實波動範圍是在計算[DMI 指標](https://www.moneydj.com/KMDJ/wiki/wikiViewer.aspx?keyid=6025aa7c-7df6-4da0-9703-0ce6a7ff562c) 時，必須要先計算的過程，所以可以參考DMI指標
 
-為一個詳細的計算範例．
-![image](https://www.moneydj.com/KMDJ/imageGetter.aspx?fileID=1660) 
+為一個詳細的計算範例．  
+![image](https://www.moneydj.com/KMDJ/imageGetter.aspx?fileID=1660)   
 
-附圖１是台股指數的14日平均的ATR指標，從圖中可知，當股價處穩定的緩升期，或是橫盤整理期時，ATR的數值會比較小，而當股價呈現較大幅度的下跌時，ATR值則明穩的變大許多．再從ATR的公式來看，如果股價在正常波動範圍內的時候，ATR的數值不會太大，只有當行情在短期內出現較多次的「跳空」時，ATR值才會瞬間變大．所以附圖１告訴我們：只有當股巿下跌時ATR值才會變大，這表示巿場在股價上漲時，很少是以「跳空」的方式上漲的，反而在下跌時卻有比較多的機會以「跳空」方式下跌．
-![image](https://www.moneydj.com/KMDJ/imageGetter.aspx?fileID=1661) 
+附圖１是台股指數的14日平均的ATR指標  
+![image](https://www.moneydj.com/KMDJ/imageGetter.aspx?fileID=1661)   
+從圖中可知，當股價處穩定的緩升期，或是橫盤整理期時，ATR的數值會比較小，而當股價呈現較大幅度的下跌時，ATR值則明穩的變大許多．再從ATR的公式來看，如果股價在正常波動範圍內的時候，ATR的數值不會太大，只有當行情在短期內出現較多次的「跳空」時，ATR值才會瞬間變大．所以附圖１告訴我們：只有當股巿下跌時ATR值才會變大，這表示巿場在股價上漲時，很少是以「跳空」的方式上漲的，反而在下跌時卻有比較多的機會以「跳空」方式下跌．  
 
-附圖２所示的首利股票的ATR值反而是跟股價同步變動，股價高時ATR也高，股價低時 ATR也低，這表示該股在上漲時容易跳空上漲，下跌時反而跳空的情形較少．
-![image](https://www.moneydj.com/KMDJ/imageGetter.aspx?fileID=1662) 
+附圖２所示的首利股票的ATR值反而是跟股價同步變動   
+![image](https://www.moneydj.com/KMDJ/imageGetter.aspx?fileID=1662)   
+股價高時ATR也高，股價低時 ATR也低，這表示該股在上漲時容易跳空上漲，下跌時反而跳空的情形較少．
