@@ -1,5 +1,5 @@
 ---
-ATR指標的原文是Average True Range，原文的意思是「平均真實區域」指標，
+ATR指標的原文是Average True Range，原文的意思是「平均真實區域」指標
 ---
 所謂的真實區域，其實指的是真實的股價「波動」區域．這個指標也是威爾德（Wilder）所發明的.
 
@@ -17,13 +17,14 @@ ATR指標的原文是Average True Range，原文的意思是「平均真實區�
  3.如果今天大盤是跳空下漲，而且這個空沒有被回補，那麼如果還是以今高減今低當作今天價格的波動幅度，
  那顯然就遺漏了跳空下跌的部份，所以要將那部份加回來，所以今天TR就是今日最低價減去昨日收盤價的「絕對值」．注意，我們對真正的波幅都是取「正值」．
 
-接著取 TR 的N日簡單平均值TRma ；再將TRma 取N日的KD式平滑即可.
+接著取 TR 的N日簡單平均值TRma ；再將TRma 取N日的KD式平滑即可.  
 `2.  TRma t  = Sum of ( TR t  )  /  N1  ( 令N1=14 )`  
-``3.  ETRma t   =  ETRma t-1  + ( TRma t   – ETRma t-1  ) / N2``   
+`3.  ETRma t   =  ETRma t-1  + ( TRma t   – ETRma t-1  ) / N2` 
 　　(令N2=3 )
 
 
-TR真實波動範圍是在計算DMI指標時，必須要先計算的過程，所以可以參考DMI指標
+TR真實波動範圍是在計算[DMI 指標](https://www.moneydj.com/KMDJ/wiki/wikiViewer.aspx?keyid=6025aa7c-7df6-4da0-9703-0ce6a7ff562c) 時，必須要先計算的過程，所以可以參考DMI指標
+
 為一個詳細的計算範例．
 ![image](https://www.moneydj.com/KMDJ/imageGetter.aspx?fileID=1660) 
 
