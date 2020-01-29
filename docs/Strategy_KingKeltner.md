@@ -1,4 +1,4 @@
-##凱特王交易系統
+## 凱特王交易系統
 
 以移動平均線計算為主要指標用在凱特王交易系統中。移動平均線通過計算X週期日期求和並且區分累計求和通過X值。一些時間這些計算用在固定數字的日期指向上。
 你有了很多資料指示後，新資料指示很少影響在最終的平均價值。長期移動均線指標試圖解決長期趨勢運動。
@@ -26,12 +26,12 @@
 
 永遠記住出場技巧入場技巧的成功與否。
 
-凱特王系統是一個長期趨勢系統，短期盈利不是我們的目的。
+### 凱特王系統是一個長期趨勢系統，短期盈利不是我們的目的。
 
 我們將獲利如果他們按照我們的計畫，但是這個類型的系統他們最終可能達不到預想的目的。
-這個系統很少超過50%的成功率，我們抓到少數大的趨勢將彌補多數小的虧損。
+### 這個系統很少超過50%的成功率，我們抓到少數大的趨勢將彌補多數小的虧損。
 
-大多數均線系統都是非常簡單的程式並且這個也不例外，我們僅僅需要兩個工具
+### 大多數均線系統都是非常簡單的程式並且這個也不例外，我們僅僅需要兩個工具
 （1）最高、最低、收盤價的移動平均線。
 （2）移動平均線真實排列。
 
@@ -39,3 +39,29 @@
 所以真實排列計算延伸出來的日線排列就是前日的收盤價（真實排列=MAX（昨日收盤，當日最高價）-MIN（昨日收盤，當日最低）
 因此，擴展了日線的範圍從而包括一些昨日收盤造成的缺口。我們認為真實排列給出了一些更精確的測定市場波動的方法。
 因此我們努力獲取長期移動趨勢，我們將用40日參數為我們平均參考計算。
+
+### King Keltner Pseudocode
+
+King Keltner Program  
+{King Keltner by George Pruitt—based on trading system presented by Chester Keltner}  
+
+Inputs: avgLength(40), atrLength(40);  
+Vars: upBand(0),dnBand(0),liquidPoint(0),movAvgVal(0);  
+movAvgVal = Average(((High + Low + Close)/3),40);  
+upBand = movAvgVal + AvgTrueRange(TrueRange,40);  
+dnBand = movAvgVal – AvgTrueRange(TrueRange,40);  
+liquidPoint = movAvgVal  
+
+A long position will be initiated when today's movAvg is greater than yesterday's and market action >= upBand  
+A short position will be initiated when today's movAvg is less than yesterday's and market action <= dnBand  
+A long position will be liquidated when today's market action <= liquidPoint  
+A short position will be liquidated when today's market action >= liquidPoint  
+
+if(movAvgVal > movAvgVal[1]) then Buy ("KKBuy") tomorrow at upBand stop;  
+if(movAvgVal < movAvgVal[1]) then Sell Short("KKSell") tomorrow at dnBand  
+stop;  
+
+liquidPoint = movAvgVal;  
+112 Building Winning Trading Systems with TradeStation  
+If(MarketPosition = 1) then Sell tomorrow at liquidPoint stop;  
+If(MarketPosition = –1) then Buy To Cover tomorrow at liquidPoint stop;  
