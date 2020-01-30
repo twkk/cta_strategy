@@ -1,5 +1,7 @@
 以布林帶策略（BollStrategy）的引數優化為例：所以在算力少一半的情況下，遺傳演算法的優勢差不多是窮舉演算法的12倍多!!!
 
+![image](https://cdn.bigquant.com/community/uploads/default/original/3X/2/3/231be417ac761a3032840a53315d0f7efb3a214d.jpeg)
+
 ###  怎麼用  
  ![image](https://cdn.bigquant.com/community/uploads/default/original/3X/d/7/d70da11bd1db292f30a0a5829f3efdc5e06d7f6a.jpeg)  
 在CTA回測元件的引數優化對話方塊中，設定好要優化的引數後點擊第二個按鈕“遺傳演算法優化”就行，沒有任何其他步驟（這才叫做整合~）。  
