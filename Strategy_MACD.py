@@ -10,6 +10,26 @@ sell  Send sell order to close a long position. (self, price: float, volume: flo
 short Send short order to open as short position.(self, price: float, volume: float, stop: bool = False, lock: bool = False):        
 cover Send cover order to close a short position.(self, price: float, volume: float, stop: bool = False, lock: bool = False): 
 
+
+class TradeData(BaseData):          Trade data contains information of a fill of an order. One order can have several trade fills.
+class PositionData(BaseData):       Positon data is used for tracking each individual position holding.
+class ContractData(BaseData):       Contract data contains basic information about each contract traded. 已完成的交易
+class OrderRequest:                 Request sending to specific gateway for creating a new order
+
+app\subscript_trader\engine.py 
+class ScriptEngine(BaseEngine):
+ get_order
+ get_orders
+ get_trades
+ get_all_active_orders
+ get_all_contracts
+ get_contract
+ get_position
+ get_all_positions
+ get_bars
+
+查詢持倉 print(engine.get_all_positions(use_df = True))
+
 2020.2.1 KK Taiwan
 修正模式 減少訊號 改用 5mins, 8mins, 15mins 實驗 macd 敏感度 >>
 
