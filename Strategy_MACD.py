@@ -19,8 +19,24 @@
       1 符合長期訊號 > 跟新短倉持有時限
       1 尋找平倉機會
       2 震盪區 保險對稱單
-      
 
+From 海龜 
+if bar.datetime.time() < self.exit_time:
+  if self.pos == 0:     
+    if bar.close_price > self.day_open:
+       if not self.long_entered:
+           self.buy(self.long_entry, self.fixed_size, stop=True)
+        else:
+            if not self.short_entered:
+               self.short(self.short_entry, self.fixed_size, stop=True)
+   else:            
+     if self.pos > 0:
+        self.sell(bar.close_price * 0.99, abs(self.pos))
+     elif self.pos < 0:
+        self.cover(bar.close_price * 1.01, abs(self.pos))
+      
+on_order(self, order: OrderData):
+order.vt_orderid 訂單
 移動平均線收斂/發散  技術指標是26週期和12週期指數移動平均線（EMA）之間的差
 買/賣機會，MACD圖表上繪製了一條所謂的信號線（該指標的9個週期移動均線）
 這邊非標準的 macd 訊號~ double_ma 使用了Sma 訊號代替 Ema訊號 (計算上簡單多了)
