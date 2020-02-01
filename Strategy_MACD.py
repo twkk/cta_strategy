@@ -28,6 +28,30 @@ class ScriptEngine(BaseEngine):
  get_all_positions
  get_bars
 
+def onStart（） 启动策略，再策略类中实现，再示例中，是调用putEvent 发出策略状态的变化事件
+def onStop（）停止策略，类似onstart
+def onTick（）  tick行情接受，推送到BarGenerator中 由其的updatetick处理，生产1分钟K
+def onOrder（ ）收到委托变化推送
+def onTrader（）收到成交推送，
+def onBar （ ）收到Bar推送bg.updateBar(bar)，生产不同周期K
+def onStopOrder
+def buy（ ） 买开，多开；调用sendOrder 发送交易
+def sell（）卖平，多平；调用sendOrder 发送交易
+def short（）卖开，即空开；调用sendOrder 发送交易
+def cover（）买平，空平；调用sendOrder 发送交易
+def sendOrder（） 调用 策略引擎接口 sendorder发送交易
+def cancelOrder（）调用策略引擎接口 发送 cancelOder指令
+def insertTick （） 调用策略引起ctaEngine (insertData)->mainEngin(dbinsert)接口，将tikc保存到mongodb数据库中
+def insertBar （）同上，保存的为k线
+def loadTick（） 从数据库中读取tick，调用ctaEngine的接口
+def loadBar（） 同上
+def writeCtalog （）记录Cta的日志
+def getEngineType （）查询当前的运行环境是测试还是实盘
+def saveSyncData（）保存同步数据到数据库 同样是调用的cta引擎接口
+def getPriceTick （ ）询最小价格变动，下指令时用到，ctaEngine是从 mainEngine中解析contract获得数据
+
+
+
 查詢持倉 print(engine.get_all_positions(use_df = True))
 
 2020.2.1 KK Taiwan
