@@ -8,6 +8,8 @@ vnpy\trader\utility.py              class BarGenerator:
     1. for x minute bar, x must be able to divide 60: 2, 3, 5, 6, 10, 15, 20, 30
     2. for x hour bar, x can be any number
 
+週期策略    on_bar(self, bar: BarData): 短長周期跟新檢查
+
 '''
 from vnpy.app.cta_strategy import (
     CtaTemplate,
@@ -86,6 +88,7 @@ class MultiTimeframeStrategy(CtaTemplate):
     def on_bar(self, bar: BarData):
         """
         Callback of new bar data update.
+        確認長短週期策略
         """
         self.bg5.update_bar(bar)
         self.bg15.update_bar(bar)
