@@ -2,6 +2,14 @@
  init from vnpy double_ma_strategy.py
  org cutomer args 
      fast_window = 10,slow_window = 20,self.load_bar(10) 
+     
+vnpy 基本交易委託訂單定義
+buy   Send buy order to open a long position.   (self, price: float, volume: float, stop: bool = False, lock: bool = False):
+sell  Send sell order to close a long position. (self, price: float, volume: float, stop: bool = False, lock: bool = False):
+
+short Send short order to open as short position.(self, price: float, volume: float, stop: bool = False, lock: bool = False):        
+cover Send cover order to close a short position.(self, price: float, volume: float, stop: bool = False, lock: bool = False): 
+
 2020.2.1 KK Taiwan
 修正模式 減少訊號 改用 5mins, 8mins, 15mins 實驗 macd 敏感度 >>
 
@@ -11,16 +19,24 @@
        if 額度 < 3 淨持倉 
        if Buy_singal_Long_MACD  
           if Buy_sigal-Short
+             buy
        else Sell_singal_Long_MACD  
           if Sell_sigal-Short 
-
+             short
 風控  減少持倉
      短期倉過期,部分停損停利 
       1 符合長期訊號 > 跟新短倉持有時限
       1 尋找平倉機會
+        sell
+        cover
       2 震盪區 保險對稱單
 
+
+       
+
+
 From 海龜 
+def on_bar(self, bar: BarData):
 if bar.datetime.time() < self.exit_time:
   if self.pos == 0:     
     if bar.close_price > self.day_open:
