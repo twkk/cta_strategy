@@ -6,18 +6,20 @@
 修正模式 減少訊號 改用 5mins, 8mins, 15mins 實驗 macd 敏感度 >>
 
 
-風控  新增持倉  if 額度 < 3 淨持倉 
-長期     if Buy_singal_Long_MACD  
-短期         if Buy_sigal-Short 
-長期     else Sell_singal_Long_MACD  
-短期         if Sell_sigal-Short 
+風控  新增持倉
+      確認長期訊號 >> 確認短期操作時間點
+       if 額度 < 3 淨持倉 
+       if Buy_singal_Long_MACD  
+          if Buy_sigal-Short
+       else Sell_singal_Long_MACD  
+          if Sell_sigal-Short 
 
 風控  減少持倉
-     短期倉過期 
+     短期倉過期,部分停損停利 
       1 符合長期訊號 > 跟新短倉持有時限
       1 尋找平倉機會
       2 震盪區 保險對稱單
-
+      
 
 移動平均線收斂/發散  技術指標是26週期和12週期指數移動平均線（EMA）之間的差
 買/賣機會，MACD圖表上繪製了一條所謂的信號線（該指標的9個週期移動均線）
