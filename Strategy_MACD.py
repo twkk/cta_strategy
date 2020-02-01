@@ -7,6 +7,7 @@
 買/賣機會，MACD圖表上繪製了一條所謂的信號線（該指標的9個週期移動均線）
 這邊非標準的 macd 訊號~ double_ma 使用了Sma 訊號代替 Ema訊號 (計算上簡單多了)
 先利用收盤價的指數移動平均值 EMA（12日／26日）計算出差離值
+EMA(26)可視為MACD的零軸
 
 DEMA Double Exponential Moving Average
 EMA Exponential Moving Average
