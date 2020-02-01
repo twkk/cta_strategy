@@ -1,3 +1,14 @@
+'''
+vnpy\trader\object.py   @dataclass  class BarData(BaseData):
+vnpy\trader\utility.py              class BarGenerator:
+ self.bg5 = BarGenerator(self.on_bar, 5, self.on_5min_bar)
+    1. generating 1 minute bar data from tick data
+    2. generateing x minute bar/x hour bar data from 1 minute data
+    Notice:
+    1. for x minute bar, x must be able to divide 60: 2, 3, 5, 6, 10, 15, 20, 30
+    2. for x hour bar, x can be any number
+
+'''
 from vnpy.app.cta_strategy import (
     CtaTemplate,
     StopOrder,
