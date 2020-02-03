@@ -26,6 +26,7 @@ vnpy\trader\utility.py              class BarGenerator:
   停利訊號
  
  平倉 目標 修改止價 >>停損零點
+ 
    
 短周期定義  5mins
 
@@ -163,6 +164,56 @@ class MultiTimeframeStrategy(CtaTemplate):
             if self.ma_trend > 0 or self.rsi_value > 50:
                 self.cover(bar.close_price + 5, abs(self.pos))
 
+        ###KK 跟新長倉策略
+        self.pettyfast_ma = self.am5.sma(self.fast_window)
+        self.pettyslow_ma = self.am5.sma(self.slow_window)
+        if self.pettyfast_ma > self.pettyslow_ma:
+            self.ma_pettytrend = 1
+        else:
+            self.ma_pettytrend = -1
+          
+        check long 倉位
+        if(buy list) 
+          if (self.ma_pettytrend < 0) and (time > 0)
+             if 虧 
+              平倉時間點限制 - 2 time
+              if < 1 平倉
+             else
+              平倉時間點限制 - time 
+             if < 1
+               跟新下限 from 15 mins均線
+               #改為短平倉 and update limit
+          else if time < 10
+             平倉時間點限制 +time
+
+        if(short list) 
+           if (self.ma_pettytrend > 0) and (time > 0)
+             if 虧 
+               平倉時間點限制 - 2 time
+               if timw<1
+                  平倉
+             else
+              平倉時間點限制 - time
+               if < 1
+                   跟新下限 from 15 mins均線
+          else if time < 10 
+             平倉時間點限制 + time
+
+        if self.pos == 0:
+            if self.ma_trend > 0 and self.rsi_value >= self.rsi_long:
+                self.buy_signal(bar.close_price + 5, self.fixed_size)
+            elif self.ma_trend < 0 and self.rsi_value <= self.rsi_short:
+                self.short(bar.close_price - 5, self.fixed_size)
+
+        elif self.pos > 0:
+            if self.ma_trend < 0 or self.rsi_value < 50:
+                self.sell_signal(bar.close_price - 5, abs(self.pos))
+
+        elif self.pos < 0:
+            if self.ma_trend > 0 or self.rsi_value > 50:
+                self.cover_signal(bar.close_price + 5, abs(self.pos))
+        ###
+            
         self.put_event()
 
     def on_15min_bar(self, bar: BarData):
@@ -173,11 +224,40 @@ class MultiTimeframeStrategy(CtaTemplate):
 
         self.fast_ma = self.am15.sma(self.fast_window)
         self.slow_ma = self.am15.sma(self.slow_window)
-
         if self.fast_ma > self.slow_ma:
-            self.ma_trend = 1
+            self.ma_trend = 1     增持
         else:
-            self.ma_trend = -1
+            self.ma_trend = -1    減持
+          
+        self.fast_ma0 = fast_ma[-1]
+        self.fast_ma1 = fast_ma[-2]
+        self.slow_ma0 = slow_ma[-1]
+        self.slow_ma1 = slow_ma[-2]
+        cross_over = self.fast_ma0 > self.slow_ma0 and self.fast_ma1 < self.slow_ma1
+        cross_below = self.fast_ma0 < self.slow_ma0 and self.fast_ma1 > self.slow_ma1
+        
+#當柱線 接近0時，持有持間短 柱線離0遠時持有持間長
+#MACD = DIF12的9日移動平均 = EMA(DIF,9)
+#柱線OSC = 時間差DIF–MACD = (Ema12 - Ema26) - 9日均線(Ema12 - Ema26) =[(fast_ma[0]+fast_ma[-1]+fast_ma[-2]+...fast_ma[-8]) -(slow_ma[0]+slow_ma[-1]+slow_ma[-2]...+slow_ma[-8])]/9
+#EMA(26)可視為MACD的零
+
+        if cross_over:
+            if self.pos == 0:                    #1.柱線由負轉正，為買進訊號。
+                self.buy(bar.close_price, 1)     #15mins   越0 增持到長多滿足 第二次買進
+            elif self.pos < 0:
+                if net stock 多 or 0
+                   self.buy(bar.close_price, 1)     #15mins 抄低點增持多單  第一次買進
+                else net stock 空
+                   self.cover(bar.close_price, 1) #減持空單
+           
+        elif cross_below:
+            if self.pos == 0:                   #柱線由正轉負，為賣出訊號。 
+                self.short(bar.close_price, 1)  #15 mins 越0 增持到空單滿足 第二次空單
+            elif self.pos > 0:
+                if net stock 空 or 0                  #增持空單
+                   self.short(bar.close_price, 1)     #15mins 抄低點增持多單  第一次買進
+                else net stock 多
+                   self.sell(bar.close_price, 1) # 減持多單         
 
     def on_order(self, order: OrderData):
         """
