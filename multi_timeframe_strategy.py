@@ -10,6 +10,44 @@ vnpy\trader\utility.py              class BarGenerator:
 
 週期策略    on_bar(self, bar: BarData): 短長周期跟新檢查
 
+2020.2.1 KK Taiwan
+修正模式 減少訊號 改用 5mins, 8mins, 15mins 實驗 macd 敏感度 >>
+
+長周期定義 15mins 
+
+  買進區間 短突破長向上~到零點之間價位 最高最低 時間區間 
+  賣出區間 短突破長向下~到零點之間價位 最高最低 時間區間
+
+ 買進區間 到零點 最大持倉量為4  為T1 買進均價 > 最高最低點/2 >> 買進剩下的 >> 
+                update 持倉週期的停損停利 時間週期2T if 獲利 跟新長期停損點以零點為基礎  時間週期3T 以2T為長期停損點
+                停損停利點零點為基準的停損停利點
+ 非買進區間 最大買賣量為2
+  
+  停利訊號
+ 
+ 平倉 目標 修改止價 >>停損零點
+   
+短周期定義  5mins
+
+
+風控  新增持倉
+      確認長期訊號 >> 確認短期操作時間點
+      長期訊號經過時間 /前一個長期訊號時間長短
+       if 額度 < 3 淨持倉 
+       if Buy_singal_Long_MACD  
+          if Buy_sigal-Short
+             buy
+       else Sell_singal_Long_MACD  
+          if Sell_sigal-Short 
+             short
+風控  減少持倉
+     短期倉過期,部分停損停利 
+      1 符合長期訊號 > 跟新短倉持有時限
+      1 尋找平倉機會
+        sell
+        cover
+      2 震盪區 保險對稱單
+
 '''
 from vnpy.app.cta_strategy import (
     CtaTemplate,
@@ -25,12 +63,12 @@ from vnpy.app.cta_strategy import (
 
 class MultiTimeframeStrategy(CtaTemplate):
     """"""
-    author = "用Python的交易员"
+    author = "KK Taiwan 交易員"
 
     rsi_signal = 20
     rsi_window = 14
-    fast_window = 5
-    slow_window = 20
+    fast_window = 12 # init define for 5mins * 12 = 1HR  
+    slow_window = 30# inti define for 5mins * 36 = 3HR
     fixed_size = 1
 
     rsi_value = 0
@@ -46,6 +84,19 @@ class MultiTimeframeStrategy(CtaTemplate):
 
     variables = ["rsi_value", "rsi_long", "rsi_short",
                  "fast_ma", "slow_ma", "ma_trend"]
+    
+    fast_window = 12   
+    slow_window = 36   
+
+    fast_ma0 = 0.0
+    fast_ma1 = 0.0
+
+    slow_ma0 = 0.0
+    slow_ma1 = 0.0
+
+    parameters = ["fast_window", "slow_window"]
+    variables = ["fast_ma0", "fast_ma1", "slow_ma0", "slow_ma1"]
+    
 
     def __init__(self, cta_engine, strategy_name, vt_symbol, setting):
         """"""
@@ -59,6 +110,10 @@ class MultiTimeframeStrategy(CtaTemplate):
 
         self.bg15 = BarGenerator(self.on_bar, 15, self.on_15min_bar)
         self.am15 = ArrayManager()
+        
+            
+
+
 
     def on_init(self):
         """
