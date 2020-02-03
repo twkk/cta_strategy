@@ -83,19 +83,7 @@ class MultiTimeframeStrategy(CtaTemplate):
                   "fixed_size"]
 
     variables = ["rsi_value", "rsi_long", "rsi_short",
-                 "fast_ma", "slow_ma", "ma_trend"]
-    
-    fast_window = 12   
-    slow_window = 36   
-
-    fast_ma0 = 0.0
-    fast_ma1 = 0.0
-
-    slow_ma0 = 0.0
-    slow_ma1 = 0.0
-
-    parameters = ["fast_window", "slow_window"]
-    variables = ["fast_ma0", "fast_ma1", "slow_ma0", "slow_ma1"]
+                 "fast_ma", "slow_ma", "ma_trend","fast_ma1","slow_ma1"]
     
 
     def __init__(self, cta_engine, strategy_name, vt_symbol, setting):
