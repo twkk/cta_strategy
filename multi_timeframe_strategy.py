@@ -172,7 +172,8 @@ class MultiTimeframeStrategy(CtaTemplate):
         else:
             self.ma_pettytrend = -1
           
-        check long 倉位
+ 
+        
         if(buy list) 
           if (self.ma_pettytrend < 0) and (time > 0)
              if 虧 
@@ -240,8 +241,23 @@ class MultiTimeframeStrategy(CtaTemplate):
 #MACD = DIF12的9日移動平均 = EMA(DIF,9)
 #柱線OSC = 時間差DIF–MACD = (Ema12 - Ema26) - 9日均線(Ema12 - Ema26) =[(fast_ma[0]+fast_ma[-1]+fast_ma[-2]+...fast_ma[-8]) -(slow_ma[0]+slow_ma[-1]+slow_ma[-2]...+slow_ma[-8])]/9
 #EMA(26)可視為MACD的零
-
-        if cross_over:
+       check long 倉位
+        柱狀下面 奇數次向上突破 淨多單 
+                 偶數次突破     平倉
+       
+   
+   
+        if cross_over: 紅向上穿出 
+        if 下半部柱狀
+           開倉多單
+        else if 上半部柱狀
+           開倉空單
+        if cross_over: 紅穿入
+           if 下半部柱狀
+              平倉多單
+           else if 上半部柱狀
+              平倉空單
+            
             if self.pos == 0:                    #1.柱線由負轉正，為買進訊號。
                 self.buy(bar.close_price, 1)     #15mins   越0 增持到長多滿足 第二次買進
             elif self.pos < 0:
