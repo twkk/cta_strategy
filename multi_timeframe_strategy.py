@@ -1,4 +1,15 @@
 '''
+self.pos： 倉位  怎麼判斷的check from on trade?
+
+    財務風險控制   最大/最小持倉  開倉   VarMax    unit  masktime
+   60mins 2次/day     2/1       全倉    0         1/4    30
+   30mins 4次/day   1.5/0.7      2/3    1/3       1/4    15
+   15mins 8次/day     1/0.5      1/2    1/4       1/4     5    
+   5mins 16次/day       0.5      1/4    1/4       1/4     1
+    
+開倉檢查策略 時間週期長 >> 時間週期短 確保masttime 持倉策略長的能夠不被短的影響
+短周期與長週期策略衝突  >> ATR*unit < Var 減持 or ATR unit > Var 開新反向短倉
+
 vnpy\trader\object.py   @dataclass  class BarData(BaseData):
 vnpy\trader\utility.py              class BarGenerator:
  self.bg5 = BarGenerator(self.on_bar, 5, self.on_5min_bar)
@@ -26,7 +37,7 @@ vnpy\trader\utility.py              class BarGenerator:
   停利訊號
  
  平倉 目標 修改止價 >>停損零點
- 
+ last 突破時間點到 柱狀反向 為T (最高Ht 最低Lt) 兩點連線之趨勢線 超過為過熱 Touch 平倉訊號啟動~ 平倉一半額度
    
 短周期定義  5mins
 
@@ -286,7 +297,8 @@ class MultiTimeframeStrategy(CtaTemplate):
         Callback of new trade data update.
         """
         self.put_event()
-
+        #调用sync_data函数后,策略持仓终于写入文件中
+        
     def on_stop_order(self, stop_order: StopOrder):
         """
         Callback of stop order update.
