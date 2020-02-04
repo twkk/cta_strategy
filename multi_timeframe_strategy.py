@@ -197,7 +197,46 @@ class MultiTimeframeStrategy(CtaTemplate):
             self.ma_pettytrend = -1
           
  
-        
+        #####
+     
+     max(cross_over60*2,cross_over30*1.5+cross_over15*1+cross_over5*0.5)
+     +(max(self.ma_trend60,0)+max(self.ma_trend30,0)+max(self.ma_trend15,0)+max(ma_trend5,0))*0.5
+      
+     if(cross_over60) 
+        if(存在60平倉) 
+           待開倉減少
+            待開新多倉量 =  2+(max(self.ma_trend30,0)+max(self.ma_trend15,0)+max(ma_trend5,0))*0.5
+        else
+           待開新多倉量 =  2+(+max(self.ma_trend30,0)+max(self.ma_trend15,0)+max(ma_trend5,0))*0.5
+     elif(cross_over30) 
+        if(平倉30)  
+           待開新多倉量 =  1.5+max(self.ma_trend15,0)+max(ma_trend5,0))*0.5
+            if(self.ma_trend60) 
+                time limit set
+     elif(cross_over15) 
+        if(平倉15)  
+           待開新多倉量 =  1+max(ma_trend5,0))*0.5
+            if(self.ma_trend30) 
+                time limit set
+     if(cross_over5) 
+        if(平倉5)  
+          新多倉量 0.5       
+
+    ##min(1.5, 反向訊號 (cross_below60*0.8 +cross_below30* 0.7+cross_below15*0.5 + cross_below5 0.8 +L2 0.7 +L1 0.5))
+    待開新空單量 =
+     max(cross_over60*2,cross_over30*1.5+cross_over15*1+cross_over5*0.5)
+    +(min(self.ma_trend60,0)+min(self.ma_trend30,0)+min(self.ma_trend15,0)+min(ma_trend5,0))*0.5
+    if(待開淨新多倉量>0) 
+            平倉對應空單~60,30,15,5
+    if(待開淨新空倉量>0)
+            平倉對應多單~60,30,15,5
+    if(ma_trend5 >0) 
+      buy 1unit
+    else
+      wait tile cross_over5
+      buy 1unit
+    
+    ######
         if(buy list) 
           if (self.ma_pettytrend < 0) and (time > 0)
              if 虧 
@@ -298,6 +337,66 @@ class MultiTimeframeStrategy(CtaTemplate):
                    self.short(bar.close_price, 1)     #15mins 抄低點增持多單  第一次買進
                 else net stock 多
                    self.sell(bar.close_price, 1) # 減持多單         
+
+                    
+    def on_60min_bar(self, bar: BarData):
+        """"""
+        self.am60.update_bar(bar)
+        if not self.am60.inited:
+            return
+        self.fast_ma = self.am60.sma(self.fast_window)
+        self.slow_ma = self.am60.sma(self.slow_window)
+        if self.fast_ma > self.slow_ma:
+            self.ma_trend60 = 1     增持
+        else:
+            self.ma_trend60 = -1    減持
+          
+        self.fast_ma0 = fast_ma[-1]
+        self.fast_ma1 = fast_ma[-2]
+        self.slow_ma0 = slow_ma[-1]
+        self.slow_ma1 = slow_ma[-2]
+        cross_over60 = self.fast_ma0 > self.slow_ma0 and self.fast_ma1 < self.slow_ma1
+        cross_below60 = self.fast_ma0 < self.slow_ma0 and self.fast_ma1 > self.slow_ma1
+     
+    def on_30min_bar(self, bar: BarData):
+        """"""
+        self.am30.update_bar(bar)
+        if not self.am30.inited:
+            return
+        self.fast_ma = self.am30.sma(self.fast_window)
+        self.slow_ma = self.am30.sma(self.slow_window)
+        if self.fast_ma > self.slow_ma:
+            self.ma_trend30 = 1     增持
+        else:
+            self.ma_trend30 = -1    減持
+          
+        self.fast_ma0 = fast_ma[-1]
+        self.fast_ma1 = fast_ma[-2]
+        self.slow_ma0 = slow_ma[-1]
+        self.slow_ma1 = slow_ma[-2]
+        cross_over30 = self.fast_ma0 > self.slow_ma0 and self.fast_ma1 < self.slow_ma1
+        cross_below30 = self.fast_ma0 < self.slow_ma0 and self.fast_ma1 > self.slow_ma1    
+    
+    def on_15min_bar(self, bar: BarData):
+        """"""
+        self.am15.update_bar(bar)
+        if not self.am15.inited:
+            return
+
+        self.fast_ma = self.am15.sma(self.fast_window)
+        self.slow_ma = self.am15.sma(self.slow_window)
+        if self.fast_ma > self.slow_ma:
+            self.ma_trend = 1     增持
+        else:
+            self.ma_trend = -1    減持
+          
+        self.fast_ma0 = fast_ma[-1]
+        self.fast_ma1 = fast_ma[-2]
+        self.slow_ma0 = slow_ma[-1]
+        self.slow_ma1 = slow_ma[-2]
+        cross_over15 = self.fast_ma0 > self.slow_ma0 and self.fast_ma1 < self.slow_ma1
+        cross_below15 = self.fast_ma0 < self.slow_ma0 and self.fast_ma1 > self.slow_ma1
+    
 
     def on_order(self, order: OrderData):
         """
