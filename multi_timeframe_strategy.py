@@ -1,6 +1,32 @@
 '''
-self.pos： 倉位  怎麼判斷的check from on trade?
+MACD指標程式
+快線(DIF)= MACD( Close, FastLength, SlowLength )  = var0  = MACD( Close, 12, 26 ) ;
+慢線(MACD) = XAverage( var0, MACDLength )         = var1 = XAverage( var0, 9 ) ;
+柱狀線(DIF-MACD)= 快線(DIF) - 慢線(MACD)           = var2 = var0 - var1 ;
+#柱線OSC = 時間差DIF–MACD = (Ema12 - Ema26) - 9日均線(Ema12 - Ema26) =[(fast_ma[0]+fast_ma[-1]+fast_ma[-2]+...fast_ma[-8]) -(slow_ma[0]+slow_ma[-1]+slow_ma[-2]...+slow_ma[-8])]/9
+#MACD = DIF12的9日移動平均 = EMA(DIF,9)
+#EMA(26)可視為MACD的零
 
+MA1=Average(close,Len1);
+MA2=Average(close,Len2);
+
+#DIFF，使用talib的EMA函数直接计算
+self.MACD_DIFF_array[-1] = talib.EMA(self.close_array,timeperiod = self.MACD_SHORT)[-1] - talib.EMA(self.close_array,timeperiod = self.MACD_LONG)[-1]
+#DEA
+self.MACD_DEA_array[-1] = talib.EMA(self.MACD_DIFF_array,timeperiod = self.MACD_M)[-1]
+#柱状线
+self.MACD_array[-1] = (self.MACD_DIFF_array[-1] - self.MACD_DEA_array[-1]) * 2
+
+
+If 柱狀線> 0 and MA1 cross over MA2 then Buy this bar on close;
+
+If var2> 0 and MA1 cross over MA2 then Buy this bar on close;
+If var2< 0 and MA1 cross below MA2 then SellShort this bar on close;
+
+IF （快線穿入柱線在　上面　）(柱線>快線 & 快線>0 )　柱線OSC > 快線DIF　>0
+
+self.pos： 倉位  怎麼判斷的check from on trade?
+ver0.2
     財務風險控制   最大/最小持倉  開倉   VarMax  add  unit       masktime
    60mins 2次/day     2/1    2    1       1     0.2  0.5        30           net 採購倉位 > 0.7 分次採買
    30mins 4次/day   1.5/0.7  1.3 2/3    0.7     0.2  0.5         15
@@ -10,7 +36,7 @@ self.pos： 倉位  怎麼判斷的check from on trade?
    
    震盪幅度= max (前日最高最低價,當日) >> assume 8HR  1/3 as range 開盤+- 1/2 range
    max (前日 前前日)
- 
+        
  正向倉位處理
    org   max target= 最大正向訊號 (L4,L3 0.5 +L2 0.3 +L1 0.1) + 間隔開倉量 +- 最大震幅保險 range
    式1   待開新倉量 = min(1.5, 反向訊號 (L3 0.8 +L2 0.7 +L1 0.5))            
@@ -22,7 +48,66 @@ self.pos： 倉位  怎麼判斷的check from on trade?
 
 開倉檢查策略 時間週期長 >> 時間週期短 確保masttime 持倉策略長的能夠不被短的影響
 短周期與長週期策略衝突  >> ATR*unit < Var 減持 or ATR unit > Var 開新反向短倉
-
+ 
+ ver0.3
+ 　風控-
+   1.
+   4個Macd 長短週期使得決策複雜,倉位數量不足下使得多空單處理不良會有不對偁的狀況,長週期便於為取最長的上升下區段
+   (只需要在長週期的下一次運算時計算更長周期即可確認此一長周期比例)
+   風控靠長周期   ～置換成兩個主macd計算,由實際波段觀察這個使用15mins作為長區間,　用60mins 確認長周期範圍　
+   買賣時間點短周期～短線週期用　5分鐘線 1分鐘假訊號太多要實際測試看濾網效果是否可以使用更敏感的分鐘線創造更佳的獲益率　
+   2.開倉平倉策略
+   分四次增持倉位　停頓兩次後　兩次減持    
+   
+       財務風險控制   最大/最小持倉    masktime
+   60mins 2次/day         
+   15mins 8次/day    2~1 / 1~0.5      10 mins   總共四個單位     
+   5mins 16次/day       0.5  0.5       3 mins　　靠不同時間點分次採買達到目標持倉量
+   1mins  6次/HR none offfical
+   
+   濾網 1
+        突破訊號　濾網 (macd > 5)
+        突破訊號　濾網 (快線向上　RSI < 40),( 快線向下 RSI > 60)
+        
+        mask 15mins 倉位建立後第一個訊號短倉反向訊號
+    
+    from_15_macd
+       濾網　長時間震盪　- 濾網 (-5 ＜ 柱狀 < 5) 長倉無方向性　長倉歸零　
+       　　　柱狀大小　定義持倉量　穿越方向決定　增倉方向
+       
+       長倉變動時間點
+       1.macd 操作　穿越平倉　長倉
+       2.　柱狀大小改變　增減持倉量
+       3.　無確保到特定點　平均長倉價位
+       4　短線止跌　增倉
+       
+       長倉震盪
+       方向Guess 短倉震盪　操作
+       短倉策略模組
+       
+        from 5_macd　利潤最大化　短倉
+        濾網　長時間震盪　- 濾網 (-5 ＜ 柱狀 < 5) 長倉無方向性　長倉歸零　
+       　　　柱狀大小　定義持倉量　穿越方向決定　增倉方向
+       
+    短倉持倉方式
+    
+    if (self.pos == 1unit or 2unit)  and          self.pos < max 
+       buy   +1
+       short +2
+    
+    短倉正向 平倉所有空倉  
+    
+    if (self.pos == 3 unit )           self.pos < max 
+       short +2 
+    平倉所有空倉  
+    　　　buy +60 VAR 
+    if (self.pos = 4 )           
+        sell 1   最舊的
+        short +2  
+    平倉所有空倉
+        buy +60VAR
+        
+        
 vnpy\trader\object.py   @dataclass  class BarData(BaseData):
 vnpy\trader\utility.py              class BarGenerator:
  self.bg5 = BarGenerator(self.on_bar, 5, self.on_5min_bar)
@@ -39,13 +124,12 @@ vnpy\trader\utility.py              class BarGenerator:
 
 長周期定義 15mins 
 
-  買進區間 短突破長向上~到零點之間價位 最高最低 時間區間 
-  賣出區間 短突破長向下~到零點之間價位 最高最低 時間區間
+
 
  買進區間 到零點 最大持倉量為4  為T1 買進均價 > 最高最低點/2 >> 買進剩下的 >> 
                 update 持倉週期的停損停利 時間週期2T if 獲利 跟新長期停損點以零點為基礎  時間週期3T 以2T為長期停損點
                 停損停利點零點為基準的停損停利點
- 非買進區間 最大買賣量為2
+
   
   停利訊號
  
@@ -301,9 +385,7 @@ class MultiTimeframeStrategy(CtaTemplate):
         cross_below = self.fast_ma0 < self.slow_ma0 and self.fast_ma1 > self.slow_ma1
         
 #當柱線 接近0時，持有持間短 柱線離0遠時持有持間長
-#MACD = DIF12的9日移動平均 = EMA(DIF,9)
-#柱線OSC = 時間差DIF–MACD = (Ema12 - Ema26) - 9日均線(Ema12 - Ema26) =[(fast_ma[0]+fast_ma[-1]+fast_ma[-2]+...fast_ma[-8]) -(slow_ma[0]+slow_ma[-1]+slow_ma[-2]...+slow_ma[-8])]/9
-#EMA(26)可視為MACD的零
+
        check long 倉位
         柱狀下面 奇數次向上突破 淨多單 
                  偶數次突破     平倉
