@@ -4,6 +4,12 @@ MACD指標程式
 慢線(MACD) = XAverage( var0, MACDLength )         = var1 = XAverage( var0, 9 ) ;
 柱狀線(DIF-MACD)= 快線(DIF) - 慢線(MACD)           = var2 = var0 - var1 ;
 
+柱狀由上升轉下降~多倉平倉 轉放空 有可能迴轉 (停損點)
+      紅線與柱狀線交錯 加碼     有可能再交錯 
+       
+柱狀由下降轉上升~空倉平   轉多   有可能迴轉 (停損點)
+      紅線與柱線交錯   加碼      迴轉 (再次交錯)
+     
 If 柱狀線> 0 and MA1 cross over MA2 then Buy this bar on close;
 
 If var2> 0 and MA1 cross over MA2 then Buy this bar on close;
@@ -11,7 +17,7 @@ If var2< 0 and MA1 cross below MA2 then SellShort this bar on close;
 
   #在vnpy中 return macd[-1], signal[-1], hist[-1] 
     ArrayManager talib.MACD(self.close, fast_period, slow_period, signal_period)
-    macd,DIFF,macdhist = self.am15.macd(12,26,9)
+    macd_DIF,macd_DEA ,macd_HIST  = self.am15.macd(12,26,9)
 
 IF （快線穿入柱線在　上面　）(柱線>快線 & 快線>0 )　柱線OSC > 快線DIF　>0
 
@@ -308,13 +314,13 @@ class MultiTimeframeStrategy(CtaTemplate):
         cross_over = self.fast_ma0 > self.slow_ma0 and self.fast_ma1 < self.slow_ma1
         cross_below = self.fast_ma0 < self.slow_ma0 and self.fast_ma1 > self.slow_ma1
         
-        macd,DIFF,macdhist = self.am15.macd(12,26,9)
+        macd_DIF,macd_DEA ,macd_HIST  = self.am15.macd(12,26,9)
         
         if  (macdhist > 0)
             if (macdhist < 3)
                 震盪
             else if (macdhist > DIFF) and 前多少時間不是 (向下signal )
-                
+                if macd[-1]>macdsignal[-1]
         else if (macdhist < 0)
             if (-3 < macdhist)
                 震盪 
