@@ -16,12 +16,7 @@ MACD指標程式
 MA1=Average(close,Len1);
 MA2=Average(close,Len2);
 
-#DIFF，使用talib的EMA 函數直接計算 
-self.MACD_DIFF_array[-1] = talib.EMA(self.close_array,timeperiod = self.MACD_SHORT)[-1] - talib.EMA(self.close_array,timeperiod = self.MACD_LONG)[-1]
-#DEA
-self.MACD_DEA_array[-1] = talib.EMA(self.MACD_DIFF_array,timeperiod = self.MACD_M)[-1]
-#柱狀線
-self.MACD_array[-1] = (self.MACD_DIFF_array[-1] - self.MACD_DEA_array[-1]) * 2
+
 
 """
 
@@ -39,6 +34,12 @@ def handle_bar(context, bar_dict):
 
     close       = history_bars(context.s1,50,'1d','close')
     closeArray  = numpy.array(self.closeHistory)
+    #DIFF，使用talib的EMA 函數直接計算 
+    self.MACD_DIFF_array[-1] = talib.EMA(self.close_array,timeperiod = self.MACD_SHORT)[-1] - talib.EMA(self.close_array,timeperiod = self.MACD_LONG)[-1]
+    #DEA
+    self.MACD_DEA_array[-1] = talib.EMA(self.MACD_DIFF_array,timeperiod = self.MACD_M)[-1]
+    #柱狀線  2*(DIFF-DEA),COLORSTICK;//DIFF减DEA的2倍 畫柱狀線
+    self.MACD_array[-1] = (self.MACD_DIFF_array[-1] - self.MACD_DEA_array[-1]) * 2
     
     macd,macdsignal,macdhist = talib.MACD(close, fastperiod=12, slowperiod=26, signalperiod=9)
     在vnpy中
