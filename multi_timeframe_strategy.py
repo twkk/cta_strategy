@@ -308,6 +308,18 @@ class MultiTimeframeStrategy(CtaTemplate):
         cross_over = self.fast_ma0 > self.slow_ma0 and self.fast_ma1 < self.slow_ma1
         cross_below = self.fast_ma0 < self.slow_ma0 and self.fast_ma1 > self.slow_ma1
         
+        macd,DIFF,macdhist = self.am15.macd(12,26,9)
+        
+        if  (macdhist > 0)
+            if (macdhist < 3)
+                震盪
+            else if (macdhist > DIFF) and 前多少時間不是 (向下signal )
+                
+        else if (macdhist < 0)
+            if (-3 < macdhist)
+                震盪 
+            else
+               
 #當柱線 接近0時，持有持間短 柱線離0遠時持有持間長
 
        check long 倉位
