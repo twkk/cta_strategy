@@ -74,3 +74,60 @@ onbar_5()
       wait tile cross_over5
       buy 1unit
  
+    def on_60min_bar(self, bar: BarData):
+        """"""
+        self.am60.update_bar(bar)
+        if not self.am60.inited:
+            return
+        self.fast_ma = self.am60.sma(self.fast_window)
+        self.slow_ma = self.am60.sma(self.slow_window)
+        if self.fast_ma > self.slow_ma:
+            self.ma_trend60 = 1     增持
+        else:
+            self.ma_trend60 = -1    減持
+          
+        self.fast_ma0 = fast_ma[-1]
+        self.fast_ma1 = fast_ma[-2]
+        self.slow_ma0 = slow_ma[-1]
+        self.slow_ma1 = slow_ma[-2]
+        cross_over60 = self.fast_ma0 > self.slow_ma0 and self.fast_ma1 < self.slow_ma1
+        cross_below60 = self.fast_ma0 < self.slow_ma0 and self.fast_ma1 > self.slow_ma1
+     
+    def on_30min_bar(self, bar: BarData):
+        """"""
+        self.am30.update_bar(bar)
+        if not self.am30.inited:
+            return
+        self.fast_ma = self.am30.sma(self.fast_window)
+        self.slow_ma = self.am30.sma(self.slow_window)
+        if self.fast_ma > self.slow_ma:
+            self.ma_trend30 = 1     增持
+        else:
+            self.ma_trend30 = -1    減持
+          
+        self.fast_ma0 = fast_ma[-1]
+        self.fast_ma1 = fast_ma[-2]
+        self.slow_ma0 = slow_ma[-1]
+        self.slow_ma1 = slow_ma[-2]
+        cross_over30 = self.fast_ma0 > self.slow_ma0 and self.fast_ma1 < self.slow_ma1
+        cross_below30 = self.fast_ma0 < self.slow_ma0 and self.fast_ma1 > self.slow_ma1    
+    
+    def on_15min_bar(self, bar: BarData):
+        """"""
+        self.am15.update_bar(bar)
+        if not self.am15.inited:
+            return
+
+        self.fast_ma = self.am15.sma(self.fast_window)
+        self.slow_ma = self.am15.sma(self.slow_window)
+        if self.fast_ma > self.slow_ma:
+            self.ma_trend = 1     增持
+        else:
+            self.ma_trend = -1    減持
+          
+        self.fast_ma0 = fast_ma[-1]
+        self.fast_ma1 = fast_ma[-2]
+        self.slow_ma0 = slow_ma[-1]
+        self.slow_ma1 = slow_ma[-2]
+        cross_over15 = self.fast_ma0 > self.slow_ma0 and self.fast_ma1 < self.slow_ma1
+        cross_below15 = self.fast_ma0 < self.slow_ma0 and self.fast_ma1 > self.slow_ma1
