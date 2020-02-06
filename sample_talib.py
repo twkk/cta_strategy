@@ -5,6 +5,24 @@
 # macdsignal = 9 天 MACD的EMA    慢線
 # macdhist = MACD - MACD signal  柱狀圖
 
+MACD指標程式
+快線(DIF)= MACD( Close, FastLength, SlowLength )  = var0  = MACD( Close, 12, 26 ) ;
+慢線(MACD) = XAverage( var0, MACDLength )         = var1 = XAverage( var0, 9 ) ;
+柱狀線(DIF-MACD)= 快線(DIF) - 慢線(MACD)           = var2 = var0 - var1 ;
+#柱線OSC = 時間差DIF–MACD = (Ema12 - Ema26) - 9日均線(Ema12 - Ema26) =[(fast_ma[0]+fast_ma[-1]+fast_ma[-2]+...fast_ma[-8]) -(slow_ma[0]+slow_ma[-1]+slow_ma[-2]...+slow_ma[-8])]/9
+#MACD = DIF12的9日移動平均 = EMA(DIF,9)
+#EMA(26)可視為MACD的零
+
+MA1=Average(close,Len1);
+MA2=Average(close,Len2);
+
+#DIFF，使用talib的EMA 函數直接計算 
+self.MACD_DIFF_array[-1] = talib.EMA(self.close_array,timeperiod = self.MACD_SHORT)[-1] - talib.EMA(self.close_array,timeperiod = self.MACD_LONG)[-1]
+#DEA
+self.MACD_DEA_array[-1] = talib.EMA(self.MACD_DIFF_array,timeperiod = self.MACD_M)[-1]
+#柱狀線
+self.MACD_array[-1] = (self.MACD_DIFF_array[-1] - self.MACD_DEA_array[-1]) * 2
+
 """
 
 import talib
