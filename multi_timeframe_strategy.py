@@ -3,25 +3,15 @@ MACD指標程式
 快線(DIF)= MACD( Close, FastLength, SlowLength )  = var0  = MACD( Close, 12, 26 ) ;
 慢線(MACD) = XAverage( var0, MACDLength )         = var1 = XAverage( var0, 9 ) ;
 柱狀線(DIF-MACD)= 快線(DIF) - 慢線(MACD)           = var2 = var0 - var1 ;
-#柱線OSC = 時間差DIF–MACD = (Ema12 - Ema26) - 9日均線(Ema12 - Ema26) =[(fast_ma[0]+fast_ma[-1]+fast_ma[-2]+...fast_ma[-8]) -(slow_ma[0]+slow_ma[-1]+slow_ma[-2]...+slow_ma[-8])]/9
-#MACD = DIF12的9日移動平均 = EMA(DIF,9)
-#EMA(26)可視為MACD的零
-
-MA1=Average(close,Len1);
-MA2=Average(close,Len2);
-
-#DIFF，使用talib的EMA函数直接计算
-self.MACD_DIFF_array[-1] = talib.EMA(self.close_array,timeperiod = self.MACD_SHORT)[-1] - talib.EMA(self.close_array,timeperiod = self.MACD_LONG)[-1]
-#DEA
-self.MACD_DEA_array[-1] = talib.EMA(self.MACD_DIFF_array,timeperiod = self.MACD_M)[-1]
-#柱状线
-self.MACD_array[-1] = (self.MACD_DIFF_array[-1] - self.MACD_DEA_array[-1]) * 2
-
 
 If 柱狀線> 0 and MA1 cross over MA2 then Buy this bar on close;
 
 If var2> 0 and MA1 cross over MA2 then Buy this bar on close;
 If var2< 0 and MA1 cross below MA2 then SellShort this bar on close;
+
+  #在vnpy中 return macd[-1], signal[-1], hist[-1] 
+    ArrayManager talib.MACD(self.close, fast_period, slow_period, signal_period)
+    macd,DIFF,macdhist = self.am15.macd(12,26,9)
 
 IF （快線穿入柱線在　上面　）(柱線>快線 & 快線>0 )　柱線OSC > 快線DIF　>0
 
