@@ -6,29 +6,30 @@
     1. 停損, 停利 營利目標 >>開倉類型
     1. 最大淨持倉 max bot net position 
     1. 訊號有效期間 time sort  
-onBar >>  
-  1.建立訊號 local signal  
-  2.檢查訊號   
-    a.停損策略 update  
-    b.風控 manager  
-      1.總體盈利風控  
-      2.singal by local + Gloab net position >> policy  
-         >> new open reverose policy  
-         >> close 停損 bot1,bot2  
-    c.update    移動停損 <<singal ,time   
-    d.open    check open policy  
+* onBar >>  
+  1. 建立訊號 local signal  
+  1. 檢查訊號   
+    a. 停損策略 update  
+    b. 風控 manager  
+      - 1.總體盈利風控  
+      - 2.singal by local + Gloab net position >> policy    
+        -  >> new open reverose policy   
+        -  >> close 停損 bot1,bot2   
+     c. update    移動停損 <<singal ,time   
+     d. open    check open policy  
  
-# C.開倉策略
+# C.開倉策略 
+* 輸入參數
    1. < Gloab 淨最大開倉數量
    1. < local 策略開數量
-   1. Gloab 時間訊號遮罩 避免高頻交易
-   1. local 訊號,目前持倉 (Gloab 淨持倉方向) 
-### >> 開倉類型   
->   a.mv new  
->   b.blance  
->   c.fix for holding  
-       3-1. 停損策略    << 開倉類型  
-       3-2. 開倉數量    << Gloab 淨持倉,策略訊號 
+   1. < Gloab 時間訊號遮罩 避免高頻交易
+   1. < local 訊號,目前持倉 (Gloab 淨持倉方向) 
+* 開倉類型   
+  a .mv new  
+  b .blance  
+  c.fix for holding  
+* 輸出停損策略 << 開倉類型  
+**  輸出開倉數量 << Gloab 淨持倉,策略訊號  
                
             停損點 趨勢訊號 固定停損點  
                   反轉訊號 無停損停利點  
@@ -38,13 +39,13 @@ onBar >>
    1. check 反向訊號  local 
    1. check 停損策略
             
->   停損策略  
->     固定停損點 (open policy 長倉,短倉) Trailing Stop based on fixed Stop level  
->     平衡倉     open without 停損停利   > Trailing stop not use  
->        a.反轉點  
->        b.震盪  Trailing stop based on Parabolic SAR  
->     獲利區間       
->                Trailing stop based on MA(MA policy with)  
+* 停損策略   
+    1. 固定停損點 (open policy 長倉,短倉) Trailing Stop based on fixed Stop level  
+    2. 平衡倉     open without 停損停利   > Trailing stop not use  
+        a.反轉點  
+        b.震盪  Trailing stop based on Parabolic SAR  
+    3. 獲利區間       
+               Trailing stop based on MA(MA policy with)  
                
 # E.資金獲利管控
    1. local 策略訊號 > ????? 更新移動停損策略
