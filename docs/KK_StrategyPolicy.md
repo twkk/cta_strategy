@@ -1,26 +1,33 @@
 # A.策略失效   策略失敗率高 >> 停止
  
-## **實際基於 MDQL5 BASE 的物件化策略方式**
+## **實際基於 MDQL5 BASE 多EA物件策略方式**
+讓EA 交易選擇其未結訂單用magic number--對應EA bot 進行識別 << 平倉時確認 
+一個完整的策略模型建構是一個3維數組。V1交易系統的數目，V2 是交易系統上操作的時間軸 time range 的數目，V3 是用於交易系統的交易工具數目
+
+照各個模式多貨幣交易下會使交易系統規模高速擴展，如果交易系統規模更大、EA 交易的投資組合範圍更廣，則解決方案的數量就會輕鬆超過500 個，逐個人工配置不可能 。因此，有必要通過這種方式建立一個系統，使其能夠自動調整每個組合，將其載入EA 交易的內存，然後EA 交易就可以基於該組合特定實例的規則進行交易了。
+ex當其同時使用8 個主要貨幣對時，也會出現152 種獨立的解決方案：  1 EA 交易* 8 貨幣對* 19 時間表（未包含周和月時間表）。
+
 * **輸入EA bot 參數**
-    1. 訊號參數 
-    1. 停損, 停利 營利目標 >>開倉類型
-    1. 最大淨持倉 max bot net position 
-    1. 訊號有效期間 time sort  
+    1. indicator 所需參數 >> 訊號  
+    1. local 停損, 停利 營利目標 >> 開倉類型
+    1. local 最大淨持倉 max net position 
+    1. local 訊號有效期間 time sort  
+
 * **onbar**
   1. 建立訊號 local signal  
   1. 檢查訊號 >>  singal by local + Gloab net position >> policy    
     a. 停損策略 update  
     b. local 平倉策略close  >> close 停損 bot1,bot2  
-    c. grbal 平倉 time  
+    c. Global 平倉 time  
     d. local 開倉策略 new open reverose policy   
     e. local 資金控管跟新 - 移動停損 update << singal,time   
 ---   
 # C.開倉策略 
 * 輸入參數
-   1. Gloab 淨最大開倉數量  
+   1. Global 淨最大開倉數量  
    1. local 策略開數量  
-   1. Gloab 時間訊號遮罩 避免高頻交易  
-   1. local 訊號(<indicator),目前持倉 (Gloab 淨持倉方向)   
+   1. Global 時間訊號遮罩 避免高頻交易  
+   1. local 訊號(< indicator),目前持倉 (Global 淨持倉方向)   
 * 開倉類型   
   a .mv new  
   b .blance  
