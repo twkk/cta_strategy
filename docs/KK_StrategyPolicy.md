@@ -9,22 +9,22 @@
 * **onbar**
   1. 建立訊號 local signal  
   1. 檢查訊號 >>  singal by local + Gloab net position >> policy    
-    a. 停損策略 update  
-    b. 風控 manager  整體 >> 個別
-    c. 平倉策略close  >> close 停損 bot1,bot2  
-    d. 開倉策略 new open reverose policy   
-    e. 移動停損 update << singal,time   
+    a. 停損策略 update
+    b. local 平倉策略close  >> close 停損 bot1,bot2
+    c. grbal 平倉 time
+    d. local 開倉策略 new open reverose policy   
+    e. local 資金控管跟新 - 移動停損 update << singal,time   
 --- 
 # C.開倉策略 
 * 輸入參數
-   1. < Gloab 淨最大開倉數量
-   1. < local 策略開數量
-   1. < Gloab 時間訊號遮罩 避免高頻交易
-   1. < local 訊號,目前持倉 (Gloab 淨持倉方向) 
+   1. Gloab 淨最大開倉數量
+   1. local 策略開數量
+   1. Gloab 時間訊號遮罩 避免高頻交易
+   1. local 訊號(<indicator),目前持倉 (Gloab 淨持倉方向) 
 * 開倉類型   
   a .mv new  
   b .blance  
-  c.fix for holding  
+  c .fix for holding  
 * 輸出停損策略 << 開倉類型  
 **  輸出開倉數量 << Gloab 淨持倉,策略訊號  
                
@@ -33,9 +33,14 @@
             目標淨持倉 >> 數量  
                        
 # D.平倉策略
+* 輸入參數  
+   1. signal  
+   2. time  
+   3. 停損停利  
+* functions  
    1. check 反向訊號  local 
    1. check 停損策略
-            
+           
 * 停損策略   
     1. 固定停損點 (open policy 長倉,短倉) Trailing Stop based on fixed Stop level  
     2. 平衡倉     open without 停損停利   > Trailing stop not use  
