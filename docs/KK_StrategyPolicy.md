@@ -6,18 +6,15 @@
     1. 停損, 停利 營利目標 >>開倉類型
     1. 最大淨持倉 max bot net position 
     1. 訊號有效期間 time sort  
-* onBar >>  
+* **onbar**
   1. 建立訊號 local signal  
-  1. 檢查訊號   
+  1. 檢查訊號 >>  singal by local + Gloab net position >> policy    
     a. 停損策略 update  
-    b. 風控 manager  
-      - 1.總體盈利風控  
-      - 2.singal by local + Gloab net position >> policy    
-        -  >> new open reverose policy   
-        -  >> close 停損 bot1,bot2   
-     c. update    移動停損 <<singal ,time   
-     d. open    check open policy  
- 
+    b. 風控 manager  整體 >> 個別
+    c. 平倉策略close  >> close 停損 bot1,bot2  
+    d. 開倉策略 new open reverose policy   
+    e. 移動停損 update << singal,time   
+--- 
 # C.開倉策略 
 * 輸入參數
    1. < Gloab 淨最大開倉數量
